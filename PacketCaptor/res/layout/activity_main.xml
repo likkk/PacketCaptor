@@ -32,6 +32,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="停止" />
+
+    <Button
+    	android:id="@+id/button_clear"
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:text="重置" />
     
     </LinearLayout>
 	
@@ -39,6 +45,15 @@
   <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
+
+      <EditText
+      	android:id="@+id/command_param"
+      	android:layout_width="wrap_content"
+      	android:layout_height="wrap_content"
+      	android:layout_weight="1"
+      	android:ems="10" >
+
+      </EditText>
 
     </LinearLayout>
 

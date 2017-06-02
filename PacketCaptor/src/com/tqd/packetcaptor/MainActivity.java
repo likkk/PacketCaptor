@@ -25,6 +25,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.UserHandle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +35,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,6 +53,8 @@ public class MainActivity extends Activity {
 	public IPSeeker mIPSeeker;
 	public static long mPacketCount=0;
 	public TextView mTVPacketcount;
+	private MyRunner m_runner;
+	private String m_param = "";
 	
 
 	/**
@@ -137,13 +142,39 @@ public class MainActivity extends Activity {
                 start();
             }
         });
-		
-	      
+
         Button end = (Button) findViewById(R.id.button_stop);
         end.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 stop();
+            }
+        });
+        
+        Button clear = (Button) findViewById(R.id.button_clear);
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Clear();
+            }
+        });
+        
+        final EditText textView = (EditText) findViewById(R.id.command_param);
+        textView.addTextChangedListener(new TextWatcher() {
+            
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                m_param = textView.getText().toString();
+            }
+            
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                
+            }
+            
+            @Override
+            public void afterTextChanged(Editable s) {
+                
             }
         });
 		
@@ -248,21 +279,23 @@ public class MainActivity extends Activity {
 	 */
 	public void start()
 	{
-		//用RootTools帮我们查询到pcap的路径，其实我们可以自己指定为/system/bin/pcap的，
-		Boolean isFind = RootTools.findBinary("pcap1");
-		
-		//MyRunner是我自己写的一个继承于Runner的类,用来执行命令的一个线程类
-		//本来使用这个的RootTools.runBinary(context, binaryName, parameter);但是不知道命令执行的输出数据，如何获取，
-		if(RootTools.lastFoundBinaryPaths.size()<=0){
-			
-			
-			copyPcapFile();
-			
-		}
-		
-		MyRunner mr=new MyRunner(this, RootTools.lastFoundBinaryPaths.get(0)+"pcap1", "");
-		mr.start();
-	
+	    if (null == m_runner)
+	    {
+    		//用RootTools帮我们查询到pcap的路径，其实我们可以自己指定为/system/bin/pcap的，
+    		Boolean isFind = RootTools.findBinary("pcap1");
+    		
+    		//MyRunner是我自己写的一个继承于Runner的类,用来执行命令的一个线程类
+    		//本来使用这个的RootTools.runBinary(context, binaryName, parameter);但是不知道命令执行的输出数据，如何获取，
+    		if(RootTools.lastFoundBinaryPaths.size()<=0){
+    			
+    			
+    			copyPcapFile();
+    			
+    		}
+    		
+    		m_runner =new MyRunner(this, RootTools.lastFoundBinaryPaths.get(0)+"pcap1", m_param);
+    		m_runner.start();
+	    }
 	}
 	
 	public void copyPcapFile(){
@@ -418,12 +451,19 @@ public class MainActivity extends Activity {
 		    public String toString() {
 		        return sb.toString();
 		    }
+		    
+		    public void Clear()
+		    {
+		        sb = new StringBuilder("");
+		        //System.gc();
+		    }
 	}
 	
 	class MyRunner extends Thread
 	{
 		
 		 private static final String LOG_TAG = "RootTools::Runner";
+		 public MyCommandCapture command;
 
 		    Context context;
 		    String binaryName;
@@ -446,7 +486,7 @@ public class MainActivity extends Activity {
 		         
 		            try {
 		            	//这个类里面包含了执行命令输出的数据的回调函数，
-		            	MyCommandCapture command = new MyCommandCapture(0, false, binaryName + " " + parameter);
+		            	command = new MyCommandCapture(0, false, binaryName + " " + parameter);
 		              //命令执行，参数是个超时的值,不太懂，设置的尽量大，不小了，找不到几个包，就结束了
 		            	Shell.startRootShell(10000*10000).add(command);
 		               // Shell.startRootShell().add(command);
@@ -496,10 +536,22 @@ public class MainActivity extends Activity {
 	private void stop() {
 		
 		try {
+		    if (null != m_runner)
+		    {
+		        //m_runner.stop();
+		        m_runner.command.Clear();
+		        m_runner = null;
+		    }
 			RootTools.closeAllShells();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void Clear()
+	{
+	    stop();
+	    pla.Reset();
 	}
 	
 }

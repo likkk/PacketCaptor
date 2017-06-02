@@ -544,8 +544,9 @@ public final class RootToolsInternalMethods {
         RootTools.lastFoundBinaryPaths.clear();
 
         final List<String> list = new ArrayList<String>();
-        String[] places = {"/sbin/", "/system/bin/", "/system/xbin/", "/data/local/xbin/",
-                "/data/local/bin/", "/system/sd/xbin/", "/system/bin/failsafe/", "/data/local/"};
+//        String[] places = {"/sbin/", "/system/bin/", "/system/xbin/", "/data/local/xbin/",
+//                "/data/local/bin/", "/system/sd/xbin/", "/system/bin/failsafe/", "/data/local/"};
+        String[] places = {"/system/bin/"};
 
         RootTools.log("Checking for " + binaryName);
 

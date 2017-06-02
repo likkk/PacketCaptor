@@ -197,5 +197,11 @@ public class PacketListAdapter extends BaseAdapter{
 		this.mIPSeeker=mIPSeeker2;
 		
 	}
+	
+	public void Reset()
+	{
+	    mPacketList.clear();
+        this.notifyDataSetChanged();
+	}
 
 }
