@@ -48,7 +48,7 @@ public class MainActivity extends Activity {
  
 	UserHandle userHandle=android.os.Process.myUserHandle();
 	ListView mListViewPacket;
-	PacketListAdapter pla;
+	PacketListAdapterNew pla;
 	public static int tip=0;
 	public IPSeeker mIPSeeker;
 	public static long mPacketCount=0;
@@ -127,11 +127,12 @@ public class MainActivity extends Activity {
 		
 		mTVPacketcount=(TextView) findViewById(R.id.packet_count);
 		//加载，设置字体
-		Typeface tf=Typeface.createFromAsset(getAssets(), "hkww.ttf");
-		mTVPacketcount.setTypeface(tf);
+//		Typeface tf=Typeface.createFromAsset(getAssets(), "hkww.ttf");
+//		mTVPacketcount.setTypeface(tf);
 		mTVPacketcount.setText("已抓取"+mPacketCount+"个packet");
 		mListViewPacket=(ListView) this.findViewById(R.id.packet_list);
-		pla=new PacketListAdapter(this);
+		//pla=new PacketListAdapter(this);
+        pla=new PacketListAdapterNew(this);
 		mListViewPacket.setAdapter(pla);
 		//Log.i("userHandle", userHandle.toString());
 		
@@ -282,7 +283,7 @@ public class MainActivity extends Activity {
 	    if (null == m_runner)
 	    {
     		//用RootTools帮我们查询到pcap的路径，其实我们可以自己指定为/system/bin/pcap的，
-    		Boolean isFind = RootTools.findBinary("pcap1");
+    		RootTools.findBinary("pcap1");
     		
     		//MyRunner是我自己写的一个继承于Runner的类,用来执行命令的一个线程类
     		//本来使用这个的RootTools.runBinary(context, binaryName, parameter);但是不知道命令执行的输出数据，如何获取，
@@ -552,6 +553,8 @@ public class MainActivity extends Activity {
 	{
 	    stop();
 	    pla.Reset();
+	    mPacketCount = 0;
+        mTVPacketcount.setText("已抓取"+mPacketCount+"个packet");
 	}
 	
 }

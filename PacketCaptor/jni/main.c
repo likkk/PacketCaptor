@@ -41,11 +41,22 @@ int main(int argc, char *argv[])
 	//}
 	//printf("\n");
 
+    char* param = (char *)malloc(sizeof(char) * 100);
 	if (argc >= 2)
 	{
+		int i = 0;
+		for (i = 1; i < argc; ++i)
+		{
+            strcat(param, argv[i]);
+            if (i != argc - 1)
+            {
+                strcat(param, " ");
+            }
+		}
+        //printf("devices: param=%s \n", param);
 		struct bpf_program filter;
 		//pcap_compile(pPcap_t, &filter, "src host 172.16.2.15", 1, 0);
-		pcap_compile(pPcap_t, &filter, argv[1], 1, 0);
+        pcap_compile(pPcap_t, &filter, param, 1, 0);
 		pcap_setfilter(pPcap_t, &filter);
 	}
 
@@ -55,5 +66,6 @@ int main(int argc, char *argv[])
 	printf("%d:%s", n, error_buffer1);
 	scanf("%d", &n);
 
+    free(param);
 	return 0;
 }

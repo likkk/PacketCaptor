@@ -23,8 +23,12 @@ public final class R {
         public static final int destination=0x7f06000a;
         public static final int destinationaddress=0x7f06000c;
         public static final int imageView1=0x7f060007;
+        public static final int ipDsc=0x7f06000f;
+        public static final int ipSrc=0x7f06000e;
         public static final int item_type=0x7f060008;
+        public static final int item_type_new=0x7f06000d;
         public static final int packet_count=0x7f060001;
+        public static final int packet_data=0x7f060010;
         public static final int packet_list=0x7f060006;
         public static final int source=0x7f060009;
         public static final int sourceaddress=0x7f06000b;
@@ -34,6 +38,7 @@ public final class R {
         public static final int activity_packet_list=0x7f030001;
         public static final int deliver=0x7f030002;
         public static final int packet_list_item=0x7f030003;
+        public static final int packet_list_item_new=0x7f030004;
     }
     public static final class string {
         public static final int app_name=0x7f040000;
